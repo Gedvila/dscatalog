@@ -1,10 +1,13 @@
 package com.devsuperior.dscatalog.dto;
 
-public class UserInsetDTO extends UserDTO{
+import com.devsuperior.dscatalog.services.validation.UserInsertValid;
+
+@UserInsertValid
+public class UserInsertDTO extends UserDTO{
 
     private String password;
 
-    public UserInsetDTO(){
+    public UserInsertDTO(){
         super();
     }
 
