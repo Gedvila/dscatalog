@@ -33,7 +33,7 @@ public class ProductService {
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(Pageable pageable) {
 		Page<Product> list = repository.findAll(pageable);
-		return list.map(x -> new ProductDTO(x));
+		return list.map(ProductDTO::new);
 	}
 
 	@Transactional(readOnly = true)
@@ -66,9 +66,9 @@ public class ProductService {
 
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public void delete(Long id) {
-		if (!repository.existsById(id)) {
-			throw new ResourceNotFoundException("Id not found " + id);
-		}
+        if(!repository.existsById(id)){
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
 		try {
 			repository.deleteById(id);
 		}
