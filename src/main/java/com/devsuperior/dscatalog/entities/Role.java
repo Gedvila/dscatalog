@@ -1,5 +1,6 @@
 package com.devsuperior.dscatalog.entities;
 
+import com.devsuperior.dscatalog.dto.RoleDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
