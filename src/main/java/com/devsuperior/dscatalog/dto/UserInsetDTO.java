@@ -8,8 +8,6 @@ public class UserInsetDTO extends UserDTO{
         super();
     }
 
-
-
     public String getPassword() {
         return password;
     }
