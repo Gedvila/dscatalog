@@ -5,6 +5,7 @@ import java.net.URI;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,18 +29,19 @@ public class CategoryResource {
     }
 	
 	@GetMapping
-	public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable) {
 		Page<CategoryDTO> list = categoryService.findAllPaged(pageable);
 		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
 		CategoryDTO dto = categoryService.findById(id);
 		return ResponseEntity.ok().body(dto);
 	}
-	
+
 	@PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
 		dto = categoryService.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -48,12 +50,14 @@ public class CategoryResource {
 	}
 
 	@PutMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto) {
 		dto = categoryService.update(id, dto);
 		return ResponseEntity.ok().body(dto);
 	}
 
 	@DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		categoryService.delete(id);
 		return ResponseEntity.noContent().build();
