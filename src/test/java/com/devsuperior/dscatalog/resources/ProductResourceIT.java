@@ -1,5 +1,6 @@
 package com.devsuperior.dscatalog.resources;
 
+import com.devsuperior.dscatalog.TokenUtil;
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.factories.Factory;
@@ -26,12 +27,16 @@ public class ProductResourceIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     private long existingId;
     private long nonExistingId;
     private long contTotalProducts;
     private String jsonBody;
     private Product product;
     private ProductDTO productDTO;
+    private String username, password, bearerToken;
 
     @BeforeEach
     void setUp() throws Exception{
@@ -44,6 +49,11 @@ public class ProductResourceIT {
         productDTO =Factory.createProductDTO();
 
         jsonBody = objectMapper.writeValueAsString(productDTO);
+
+        username = "maria@gmail.com";
+        password= "123456";
+
+        bearerToken = tokenUtil.obtainAccessToken(mockMvc,username,password);
     }
 
     @Test
@@ -66,6 +76,7 @@ public class ProductResourceIT {
         String expectedDescription = product.getDescription();
 
         mockMvc.perform(MockMvcRequestBuilders.put("/products/{id}",existingId)
+                        .header("Authorization","Bearer " + bearerToken)
                         .content(jsonBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -79,6 +90,7 @@ public class ProductResourceIT {
     public void updateShouldReturnNotFoundWhenIdDoesNotExists() throws Exception{
 
         mockMvc.perform(MockMvcRequestBuilders.put("/products/{id}",nonExistingId)
+                        .header("Authorization","Bearer " + bearerToken)
                         .content(jsonBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
